@@ -1,8 +1,8 @@
 # LinguaMap — USA Anthropological Word Intelligence Platform
 
-A full-stack data analysis platform that ingests, processes, analyzes, and visualizes linguistic and social behavior data across all 50 US states. Built with React, D3.js, Node.js, Python NLP pipelines, and PostgreSQL/TimescaleDB.
+A full-stack anthropological intelligence platform that tracks culturally distinctive language patterns across all 50 US states in real-time. Ingests data from Reddit, Mastodon, and NewsAPI, runs NLP pipelines including TF-IDF scoring, named entity recognition, LDA topic modeling, and sentiment analysis, then visualizes region-specific vocabulary on an interactive choropleth map.
 
-![Map View](https://img.shields.io/badge/React-Vite-blue) ![Pipeline](https://img.shields.io/badge/Python-NLP-green) ![API](https://img.shields.io/badge/Node.js-Express-yellow) ![DB](https://img.shields.io/badge/PostgreSQL-TimescaleDB-purple)
+![Map View](https://img.shields.io/badge/React-Vite-blue) ![Pipeline](https://img.shields.io/badge/Python-NLP-green) ![API](https://img.shields.io/badge/Node.js-Express-yellow) ![DB](https://img.shields.io/badge/SQLite-Database-purple) ![Deploy](https://img.shields.io/badge/Vercel-Deployed-black)
 
 ## Architecture
 
@@ -30,13 +30,13 @@ A full-stack data analysis platform that ingests, processes, analyzes, and visua
 └──────────────────────────┬──────────────────────────────┘
                            │
 ┌──────────────────────────▼──────────────────────────────┐
-│           PostgreSQL / TimescaleDB                       │
-│  13 tables · 3 materialized views · Hypertables         │
+│              SQLite / PostgreSQL                         │
+│         13 tables · Seeded data for all 50 states       │
 └──────────────────────────┬──────────────────────────────┘
                            │
 ┌──────────────────────────▼──────────────────────────────┐
-│         Express REST API (Redis-cached)                  │
-│              15+ endpoints                               │
+│         Express REST API / Static JSON Generation        │
+│              17 endpoints · Vercel-compatible            │
 └──────────────────────────┬──────────────────────────────┘
                            │
 ┌──────────────────────────▼──────────────────────────────┐
@@ -54,11 +54,11 @@ A full-stack data analysis platform that ingests, processes, analyzes, and visua
 - Word change badges highlighting states where the top word shifted in the last 24 hours
 - Filter by category, data source, and date
 
-### State Deep Dive
+### State Deep Dive (All 50 States)
+- 10 culturally authentic words per state with distinctiveness rankings and POS tags
 - 30-day sentiment trend line chart with subjectivity overlay
-- Top words ranked by distinctiveness with POS tag coloring
 - LDA topic modeling pie chart (5 topics per state)
-- Named entity recognition results (PERSON, ORG, GPE, EVENT)
+- Named entity recognition results — 5 entities per state (PERSON, ORG, GPE, LOC, FAC, EVENT)
 - Word history timeline showing daily top word progression
 
 ### National Trends
@@ -78,20 +78,27 @@ A full-stack data analysis platform that ingests, processes, analyzes, and visua
 - **Anomaly Detection** — Sentiment anomalies flagged when z-score exceeds 2 standard deviations from the 30-day rolling mean
 - **Pipeline Health** — Real-time monitoring of all ingestion and processing stages
 
+## Cultural Word Coverage
+
+All 50 states have full anthropological data sets including:
+- **10 culturally distinctive words** — e.g., Texas: rodeo, howdy, barbecue, ranch; Louisiana: crawfish, bayou, gumbo, mardi; Massachusetts: wicked, lobster, harbor, chowder
+- **5 named entities** — mix of GPE, ORG, PERSON, FAC, LOC, EVENT types relevant to each state
+- **5 LDA topics** — weekly topic models capturing regional discourse themes
+
 ## Data Pipeline
 
 The pipeline runs daily (configurable via cron) and performs 8 stages:
 
 | Stage | Description | Tools |
 |-------|-------------|-------|
-| **Ingestion** | Fetch posts from Reddit, Mastodon, NewsAPI | requests, Mastodon.py, newsapi |
+| **Ingestion** | Fetch posts from Reddit (public JSON — no API key needed), Mastodon, NewsAPI | requests, Mastodon.py, newsapi |
 | **Text Cleaning** | URL stripping, contraction expansion (62 patterns including Southern dialect), language detection, emoji extraction | langdetect, regex |
 | **Tokenization** | Lemmatization, POS tagging, n-gram frequency tables, cultural word preservation (40+ terms like "y'all", "jawn", "bodega") | spaCy |
 | **Sentiment Analysis** | Dual scoring with anomaly detection | VADER, TextBlob |
 | **Word Scoring** | TF-IDF (each state = document), spread scores, novelty decay, composite distinctiveness | scikit-learn |
 | **Entity Extraction** | Named entity recognition | spaCy NER |
 | **Topic Modeling** | Weekly LDA with 5 topics per state | scikit-learn |
-| **Clustering & Drift** | Regional clustering, linguistic drift calculation, materialized view refresh | scikit-learn, k-means |
+| **Clustering & Drift** | Regional clustering, linguistic drift calculation | scikit-learn, k-means |
 
 ### Key Scoring Algorithms
 
@@ -105,15 +112,15 @@ The pipeline runs daily (configurable via cron) and performs 8 stages:
 | Layer | Technology |
 |-------|-----------|
 | Frontend | React 18, Vite, D3.js, Recharts, React Router, Tailwind CSS |
-| API | Node.js, Express, Redis caching |
-| Database | PostgreSQL + TimescaleDB (production), SQLite (local dev) |
+| API | Node.js, Express |
+| Database | SQLite (local + build), PostgreSQL (optional production) |
+| Static Generation | Pre-rendered JSON API (172+ files at build time) |
 | NLP Pipeline | Python 3.11+, spaCy, VADER, TextBlob, scikit-learn |
-| Orchestration | Apache Airflow |
-| Deployment | Docker Compose, Render |
+| Deployment | Vercel (static), Render (full-stack) |
 
 ## Local Development
 
-### Quick Start (no Docker required)
+### Quick Start
 
 ```bash
 # 1. Clone and install
@@ -122,12 +129,12 @@ cd LinguaMap
 
 # 2. Set up environment
 cp .env.example .env
-# Add your API keys to .env
+# Add your API keys to .env (only NewsAPI and Mastodon needed)
 
 # 3. Start the API server (uses SQLite automatically)
 cd server
 npm install
-node setup-db.js    # Seeds 30 days of sample data
+node setup-db.js    # Seeds 30 days of data for all 50 states
 node index.js       # Starts on port 3001
 
 # 4. Start the frontend
@@ -136,33 +143,20 @@ npm install
 npm run dev         # Starts on port 5173
 ```
 
-The app automatically uses SQLite with seeded data when no `DATABASE_URL` is set — no PostgreSQL or Redis required for local development.
-
-### Docker Deployment
-
-```bash
-cp .env.example .env
-# Fill in API credentials
-docker-compose up -d
-
-# Frontend: http://localhost:5173
-# API: http://localhost:3001/api/health
-```
+The app automatically uses SQLite with seeded data when no `DATABASE_URL` is set — no PostgreSQL required for local development.
 
 ### Running the Pipeline
 
 ```bash
-# Full pipeline
 cd pipeline
 pip install -r requirements.txt
 python -m spacy download en_core_web_sm
 PYTHONPATH=.. python -m pipeline.orchestrator
 
 # Individual stages
-python -m pipeline.ingestion.reddit_ingestor
+python -m pipeline.ingestion.reddit_ingestor    # No API key needed — uses public JSON
 python -m pipeline.ingestion.mastodon_ingestor
 python -m pipeline.ingestion.news_ingestor
-python -m pipeline.processing.topic_modeler
 ```
 
 ## API Endpoints
@@ -198,39 +192,42 @@ python -m pipeline.processing.topic_modeler
 │       └── utils/             api.js, constants.js, mockData.js
 ├── server/                    Express REST API
 │   ├── routes/                map, state, trending, analysis, pipeline
-│   ├── middleware/            Redis cache, DB connection (PostgreSQL/SQLite)
-│   └── setup-db.js           SQLite schema + seed data
+│   ├── middleware/            DB connection (PostgreSQL/SQLite/sql.js)
+│   ├── setup-db.js            SQLite schema + seed data (all 50 states)
+│   └── generate-static-api.js Pre-renders all API endpoints as static JSON
 ├── pipeline/                  Python data pipeline
-│   ├── ingestion/             reddit, mastodon, news, wikipedia ingestors
+│   ├── ingestion/             reddit (public JSON), mastodon, news, wikipedia
 │   ├── processing/            text_cleaner, tokenizer, sentiment, word_scorer, topics, entities
 │   └── analysis/              clustering, contagion, drift, POS, sentiment geography
-├── airflow/dags/              Airflow DAG definition
 ├── db/
-│   ├── migrations/            PostgreSQL + TimescaleDB schema (13 tables)
+│   ├── migrations/            PostgreSQL schema (13 tables)
 │   └── seeds/                 State config, anthropological metadata
-├── docker/                    Dockerfiles for each service
-├── docker-compose.yml         Full stack orchestration
+├── vercel.json                Vercel deployment config
 └── render.yaml                Render deployment blueprint
 ```
 
 ## Deployment
 
-### Render (Recommended)
+### Vercel (Static — Free)
+1. Push to GitHub
+2. Import repo on [Vercel](https://vercel.com)
+3. Vercel auto-detects `vercel.json` — builds the database, generates 172+ static JSON files, and deploys as a fully static site
+4. No serverless functions or database required at runtime
+
+### Render (Full-Stack)
 1. Push to GitHub
 2. Connect repo on [Render](https://render.com)
 3. Select "Blueprint" — it auto-detects `render.yaml`
 4. Set environment variables in the dashboard
-5. Services deploy automatically: API, static frontend, PostgreSQL, Redis
 
 ### Environment Variables
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `NEWSAPI_KEY` | Yes | NewsAPI.org API key |
-| `MASTODON_ACCESS_TOKEN` | Optional | Mastodon app access token (read scope) |
+| `NEWSAPI_KEY` | For pipeline | NewsAPI.org API key |
+| `MASTODON_ACCESS_TOKEN` | For pipeline | Mastodon app access token (read scope only) |
 | `MASTODON_INSTANCE_URL` | Optional | Defaults to mastodon.social |
 | `DATABASE_URL` | Optional | PostgreSQL connection string (SQLite if unset) |
-| `REDIS_URL` | Optional | Redis connection string (in-memory cache if unset) |
 
 ## License
 
