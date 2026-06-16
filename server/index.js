@@ -1,5 +1,6 @@
 require('dotenv').config({ path: '../.env' });
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const mapRoutes = require('./routes/map');
 const stateRoutes = require('./routes/state');
@@ -23,6 +24,12 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+const clientDist = path.join(__dirname, '..', 'client', 'dist');
+app.use(express.static(clientDist));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(clientDist, 'index.html'));
+});
+
 app.listen(PORT, () => {
-  console.log(`LinguaMap API running on port ${PORT}`);
+  console.log(`LinguaMap running on port ${PORT}`);
 });
