@@ -1,0 +1,12 @@
+{
+  "name": "linguamap",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "cd client && npm install && npm run build && cd ../server && npm install",
+    "start": "cd server && node setup-db.js && node index.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
