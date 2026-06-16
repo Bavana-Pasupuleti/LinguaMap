@@ -162,11 +162,11 @@ function run() {
   // /api/health
   writeJson(path.join(OUT_DIR, 'health.json'), { status: 'ok', timestamp: new Date().toISOString() });
 
-  // Per-state profiles for the 10 states with word data
-  const statesWithWords = ['TX', 'CA', 'NY', 'FL', 'IL', 'LA', 'MA', 'WA', 'PA', 'GA'];
+  // Per-state full profiles for all 50 states
+  const allStates = db.prepare(`SELECT DISTINCT state FROM state_daily_profile`).all();
   ensureDir(path.join(OUT_DIR, 'state'));
 
-  for (const state of statesWithWords) {
+  for (const { state } of allStates) {
     const profile = db.prepare(`SELECT * FROM state_daily_profile WHERE state = ? AND date = date('now')`).all(state);
     const topWords = db.prepare(`
       SELECT word, frequency, tfidf_score, sentiment_avg, spread_score,
@@ -223,36 +223,6 @@ function run() {
     });
     writeJson(path.join(OUT_DIR, 'state', `${state.toLowerCase()}-words.json`), {
       state, date: new Date().toISOString().split('T')[0], words
-    });
-  }
-
-  // Generate profiles for all 50 states (basic)
-  const allStates = db.prepare(`SELECT DISTINCT state FROM state_daily_profile`).all();
-  for (const { state } of allStates) {
-    if (statesWithWords.includes(state)) continue;
-    const profile = db.prepare(`SELECT * FROM state_daily_profile WHERE state = ? AND date = date('now')`).all(state);
-    const sentiment = db.prepare(`
-      SELECT date(measured_at) as date, AVG(compound_score) as compound,
-             AVG(positive_ratio) as positive, AVG(negative_ratio) as negative,
-             AVG(subjectivity) as subjectivity
-      FROM state_sentiment_ts WHERE state = ? AND measured_at >= date('now', '-30 days')
-      GROUP BY date(measured_at) ORDER BY date
-    `).all(state);
-    const history = db.prepare(`
-      SELECT date, top_word, dominant_sentiment, sentiment_avg, sentiment_std, post_volume
-      FROM state_daily_profile WHERE state = ? AND date >= date('now', '-30 days')
-      ORDER BY date
-    `).all(state);
-
-    writeJson(path.join(OUT_DIR, 'state', `${state.toLowerCase()}-profile.json`), {
-      state, profile: profile[0] || null, topWords: [], entities: [],
-      topics: [], sentimentHistory: sentiment
-    });
-    writeJson(path.join(OUT_DIR, 'state', `${state.toLowerCase()}-history.json`), {
-      state, days: 30, history
-    });
-    writeJson(path.join(OUT_DIR, 'state', `${state.toLowerCase()}-words.json`), {
-      state, date: new Date().toISOString().split('T')[0], words: []
     });
   }
 
