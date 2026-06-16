@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "installCommand": "cd server && npm install && node setup-db.js && cd ../client && npm install",
+  "buildCommand": "cd client && VITE_STATIC_API=true npm run build && cd ../server && node generate-static-api.js",
+  "outputDirectory": "client/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
+      ]
+    }
+  ]
+}
