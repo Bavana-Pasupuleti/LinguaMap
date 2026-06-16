@@ -206,29 +206,6 @@ python -m pipeline.ingestion.news_ingestor
 └── render.yaml                Render deployment blueprint
 ```
 
-## Deployment
-
-### Vercel (Static — Free)
-1. Push to GitHub
-2. Import repo on [Vercel](https://vercel.com)
-3. Vercel auto-detects `vercel.json` — builds the database, generates 172+ static JSON files, and deploys as a fully static site
-4. No serverless functions or database required at runtime
-
-### Render (Full-Stack)
-1. Push to GitHub
-2. Connect repo on [Render](https://render.com)
-3. Select "Blueprint" — it auto-detects `render.yaml`
-4. Set environment variables in the dashboard
-
-### Environment Variables
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `NEWSAPI_KEY` | For pipeline | NewsAPI.org API key |
-| `MASTODON_ACCESS_TOKEN` | For pipeline | Mastodon app access token (read scope only) |
-| `MASTODON_INSTANCE_URL` | Optional | Defaults to mastodon.social |
-| `DATABASE_URL` | Optional | PostgreSQL connection string (SQLite if unset) |
-
 ## License
 
 MIT
