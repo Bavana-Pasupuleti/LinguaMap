@@ -1,0 +1,17 @@
+.env
+__pycache__/
+*.pyc
+node_modules/
+.next/
+.vercel/
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+*.db
+.claude/
+
+# Other projects in same directory
+backend/
+frontend/

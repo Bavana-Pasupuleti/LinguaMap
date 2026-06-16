@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: timescale/timescaledb:latest-pg15
+    environment:
+      POSTGRES_DB: linguamap
+      POSTGRES_USER: linguamap
+      POSTGRES_PASSWORD: linguamap
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/migrations/001_initial_schema.sql:/docker-entrypoint-initdb.d/001_initial_schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U linguamap"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pipeline:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.pipeline
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://linguamap:linguamap@postgres:5432/linguamap
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - ./pipeline:/app/pipeline
+      - ./db:/app/db
+      - ./airflow:/app/airflow
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "3001:3001"
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://linguamap:linguamap@postgres:5432/linguamap
+      REDIS_URL: redis://redis:6379/0
+      PORT: 3001
+    volumes:
+      - ./server:/app
+
+  client:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.client
+    depends_on:
+      - api
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+
+volumes:
+  pgdata:

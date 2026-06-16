@@ -1,0 +1,123 @@
+{
+  "words": {
+    "y'all": {
+      "lens": "linguistic identity",
+      "context": "Second-person plural pronoun dominant in Southern and some Midwestern dialects",
+      "social_signal": "Regional identity marker, warmth, informality",
+      "spread_pattern": "geographic diffusion from South, accelerated by social media",
+      "tags": ["identity", "dialect", "heritage"]
+    },
+    "jawn": {
+      "lens": "urban dialect",
+      "context": "Philadelphia-specific catch-all noun replacing any object or concept",
+      "social_signal": "Strong local identity marker, in-group recognition",
+      "spread_pattern": "hyperlocal with viral spread via hip-hop and social media",
+      "tags": ["identity", "dialect", "digital native"]
+    },
+    "wicked": {
+      "lens": "regional intensifier",
+      "context": "New England adverb meaning 'very' or 'extremely'",
+      "social_signal": "Boston/New England identity, casual register",
+      "spread_pattern": "stable regional, occasional national media exposure",
+      "tags": ["identity", "dialect", "cultural"]
+    },
+    "ope": {
+      "lens": "behavioral linguistics",
+      "context": "Midwestern interjection used when bumping into someone or making a small mistake",
+      "social_signal": "Politeness culture, conflict avoidance, communal awareness",
+      "spread_pattern": "viral Midwest meme, became identity signifier",
+      "tags": ["social behavior", "dialect", "identity"]
+    },
+    "hella": {
+      "lens": "regional intensifier",
+      "context": "Northern California slang for 'very' or 'a lot of'",
+      "social_signal": "Bay Area identity, youth culture, casual register",
+      "spread_pattern": "diffused from Bay Area via music and internet culture",
+      "tags": ["identity", "dialect", "digital native"]
+    },
+    "tailgate": {
+      "lens": "social ritual",
+      "context": "Pre-game gathering in parking lots involving food, drink, and community",
+      "social_signal": "Sports identity, communal bonding, regional pride",
+      "spread_pattern": "nationwide but intensity varies by college football regions",
+      "tags": ["cultural", "food ritual", "social behavior"]
+    },
+    "crawfish": {
+      "lens": "culinary identity",
+      "context": "Freshwater crustacean central to Louisiana cuisine and social gatherings",
+      "social_signal": "Louisiana identity, seasonal ritual, community gathering",
+      "spread_pattern": "Gulf South origin, spreading with Southern food culture",
+      "tags": ["food ritual", "cultural", "heritage"]
+    },
+    "bodega": {
+      "lens": "urban infrastructure",
+      "context": "Small neighborhood convenience store, especially in NYC",
+      "social_signal": "Urban identity, neighborhood rootedness, immigrant culture",
+      "spread_pattern": "NYC-centric, spreading as cultural reference",
+      "tags": ["cultural", "identity", "migration"]
+    },
+    "howdy": {
+      "lens": "greeting ritual",
+      "context": "Informal greeting associated with Texas and the broader Southwest/West",
+      "social_signal": "Friendliness norm, regional pride, cowboy culture legacy",
+      "spread_pattern": "stable in Texas, used ironically elsewhere",
+      "tags": ["social behavior", "heritage", "identity"]
+    },
+    "potluck": {
+      "lens": "communal feeding",
+      "context": "Group meal where each attendee brings a dish to share",
+      "social_signal": "Community reciprocity, egalitarian food culture, church/civic ties",
+      "spread_pattern": "nationwide but culturally dominant in Midwest and South",
+      "tags": ["food ritual", "social behavior", "cultural"]
+    },
+    "hotdish": {
+      "lens": "culinary dialect",
+      "context": "Minnesota/Upper Midwest term for casserole, often with tater tots",
+      "social_signal": "Regional comfort, home cooking identity, Scandinavian heritage",
+      "spread_pattern": "hyperlocal Minnesota/Dakotas, viral as meme",
+      "tags": ["food ritual", "dialect", "heritage"]
+    },
+    "fixin": {
+      "lens": "intentional verb",
+      "context": "Southern expression meaning 'about to' or 'preparing to'",
+      "social_signal": "Southern linguistic identity, oral tradition",
+      "spread_pattern": "stable Southern, occasionally appears in national discourse",
+      "tags": ["dialect", "identity", "heritage"]
+    },
+    "aloha": {
+      "lens": "cultural greeting",
+      "context": "Hawaiian word for love, hello, and goodbye — central cultural concept",
+      "social_signal": "Hawaiian identity, indigenous culture, tourism interface",
+      "spread_pattern": "global recognition but authentic use concentrated in Hawaii",
+      "tags": ["identity", "heritage", "cultural"]
+    },
+    "gentrification": {
+      "lens": "urban transformation",
+      "context": "Process of neighborhood change driven by incoming affluent residents",
+      "social_signal": "Class tension, displacement anxiety, cultural erasure concerns",
+      "spread_pattern": "urban centers nationwide, politically charged discourse",
+      "tags": ["civic", "social behavior", "migration"]
+    },
+    "drought": {
+      "lens": "environmental anxiety",
+      "context": "Extended water shortage affecting Western states",
+      "social_signal": "Climate awareness, resource anxiety, policy discourse",
+      "spread_pattern": "Western states, seasonal peaks, climate event driven",
+      "tags": ["civic", "cultural"]
+    },
+    "barbecue": {
+      "lens": "culinary identity warfare",
+      "context": "Contested cooking tradition with fierce regional style allegiances",
+      "social_signal": "Regional pride, identity competition, tradition preservation",
+      "spread_pattern": "nationwide but style wars concentrate in TX, KC, NC, SC, TN",
+      "tags": ["food ritual", "identity", "heritage", "cultural"]
+    },
+    "bourbon": {
+      "lens": "artisanal heritage",
+      "context": "Kentucky-origin whiskey with strict production requirements",
+      "social_signal": "Kentucky pride, craft culture, tradition meets modern branding",
+      "spread_pattern": "Kentucky base, national craft cocktail culture spread",
+      "tags": ["food ritual", "heritage", "cultural"]
+    }
+  }
+}
